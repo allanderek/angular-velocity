@@ -57,6 +57,92 @@ class FeedbackTest extends BaseTestClass
     casper.then =>
       @check_flashed_message test, 'Thanks for your feedback!', 'info'
 
+class NativeLoginTest extends BaseTestClass
+  names: ['NativeLoginTest', 'login', 'nlogin']
+  description: 'Test our native username/password login procedure'
+  numTests: 14
+  testBody: (test) ->
+    casper.thenOpen serverUrl, ->
+      @fill 'form#login_form', {
+        username: 'darrenlamb'
+        password: 'iknowandy'
+        }, true  # true = submit form
+    casper.then ->
+      # Darren is not known to us; he is returned to the login form
+      # and sees a message that his username is not found
+      test.assertExists '#login_form',
+        "After trying to log in without an account, returned to login form"
+      test.assertTextExists 'not found',
+        "After trying to log in without an account, message appears"
+
+    # he sets up a new account
+    # at first he gets overenthusiastic and tries to set two different passwords
+    casper.thenClick '#new_account', ->
+      @fill 'form#new_account_form', {
+        username: 'darrenlamb'
+        password1: 'iknowandy'
+        password2: 'imdarrenlamb'
+        }, true  # true = submit form
+    # he is returned to the new account form with an error message
+    casper.then ->
+      test.assertExists 'form#new_account_form',
+        "Darren tried non-matching passwords, is returned to form"
+      test.assertTextExists "don't match",
+        "Darren is warned about his passwords not matching"
+      # he is not logged in
+      test.assertDoesntExist '#logout'
+
+    # he tries again with matching passwords
+    casper.then ->
+      @fill 'form#new_account_form', {
+        username: 'darrenlamb'
+        password1: 'iknowandy'
+        password2: 'iknowandy'
+        }, true  # true = submit form
+    # Darren is automatically logged in
+    casper.then ->
+      # the next page has a logout button
+      test.assertExists '#logout',
+        "Darren logged in automatically, logout button appears"
+      # and shows Darren's username
+      test.assertTextExists 'darrenlamb',
+        "Darren logged in for first time, his name appears"
+
+    # he logs out
+    casper.thenClick '#logout', ->
+      test.assertDoesntExist '#logout',
+        "Darren logs out, logout button disappears"
+      test.assertExists 'form#login_form',
+        "Darren logged out, the login form is back"
+
+    # later, he logs in again
+    casper.thenOpen serverUrl, ->
+      # at first he forgets what password he settled on
+      @fill 'form#login_form', {
+        username: 'darrenlamb'
+        password: 'imdarrenlamb'
+        }, true  # true = submit form
+    casper.then ->
+      test.assertDoesntExist '#logout',
+        "After trying incorrect password, logout button doesn't appear"
+      test.assertTextExists "incorrect",
+        "After trying incorrect password, a message to that effect appears"
+      test.assertExists 'form#login_form',
+        "After trying incorrect password, login form is presented again"
+
+    # he tries once more with the correct password
+    casper.then ->
+      @fill 'form#login_form', {
+        username: 'darrenlamb'
+        password: 'iknowandy'
+        }, true  # true = submit form
+    # this time he gets in
+    casper.then ->
+      test.assertExists '#logout',
+        "Darren logs in again, logout button appears"
+      test.assertTextExists 'darrenlamb',
+        "Darren logs in again, his name appears on the page"
+
 runTestClass = (testClass) ->
   casper.test.begin testClass.description, testClass.numTests, (test) ->
     casper.start()
@@ -64,8 +150,9 @@ runTestClass = (testClass) ->
     casper.run ->
       test.done()
 
-runTestClass (new NormalFunctionalityTest)
+runTestClass (new NativeLoginTest)
 runTestClass (new FeedbackTest)
+runTestClass (new NormalFunctionalityTest)
 
 casper.test.begin 'The shutdown test', 0, (test) ->
   casper.start()
