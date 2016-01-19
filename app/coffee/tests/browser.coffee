@@ -122,10 +122,10 @@ class NativeLoginTest extends BaseTestClass
         username: 'darrenlamb'
         password: 'imdarrenlamb'
         }, true  # true = submit form
-    casper.then ->
+    casper.then =>
       test.assertDoesntExist '#logout',
         "After trying incorrect password, logout button doesn't appear"
-      test.assertTextExists "incorrect",
+      @check_flashed_message test, 'Password incorrect', 'danger',
         "After trying incorrect password, a message to that effect appears"
       test.assertExists 'form#login_form',
         "After trying incorrect password, login form is presented again"
