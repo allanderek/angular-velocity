@@ -43,8 +43,33 @@ body {
           <ul class="nav navbar-nav">
             <li {% if active_page == 'frontpage' %} class="active"{% endif%}>
                 <a href="{{ url_for('frontpage') }}">Welcome</a></li>
+            {% if current_user %}
+                <li class="dropdown" id="user-dropdown-menu">
+                  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                    {{current_user}} <b class="caret"></b></a>
+                  <ul class="dropdown-menu">
+                    <li><a href="/logout" id="logout">Log out</a></li>
+                  </ul>
+                </li>
+            {% else %} <!-- So if not current_user -->
+              <li>
+                <a id="new_account" href="{{ url_for('create_account') }}">Sign up</a>
+              </li>
+            {% endif %} <!-- end if current_user -->
+
             <li><a href="#" id="feedback-link" data-toggle="modal" data-target="#feedback-modal">Give Feedback</a></li>
           </ul>
+          {% if not current_user %}
+          <div class="sign_in">
+            <form id="login_form" class="navbar-form pull-right"
+            action="{{ url_for('login') }}" method="POST">
+              {{ login_form.hidden_tag() }}
+              {{ login_form.username(size=15, placeholder=login_form.username.description) }}
+              {{ login_form.password(size=15, placeholder=login_form.password.description) }}
+              <button class="btn" id="login_submit" type="submit" name="login" value="Login">Login</button>
+            </form>
+          </div> <!-- /.sign_in -->
+          {% endif %}<!-- end if not current_user -->
         </div><!--/.nav-collapse -->
       </div><!-- /.container -->
     </nav>
