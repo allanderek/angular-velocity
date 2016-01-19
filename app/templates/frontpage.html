@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set active_page = "frontpage" %}
+{% block lead_content %}
+
+<h1>Welcome to Angular Velocity</h1>
+
+<p class="lead">
+Welcome to Angular Velocity, we have the goal of furthering research grant
+money by optimising the use of scientific equipment. To do this we facilitate
+rental loans of research equipment.
+</p>
+{% endblock %}
+
+{% block main_content %}
+
+<div id="#starter-buttons" style="margin: 0 auto; width: 50%;">
+  <button type="button" class="btn btn-lg btn-primary">
+    <h3>hire</h3>
+    I need equipment for <strong>hire</strong>
+  </button>
+  <button type="button" class="btn btn-lg btn-primary">
+    <h3>rent</h3>
+    I have equipment available for <strong>rent</strong>
+  </button>
+</div><!-- /#starter-buttons -->
+
+{% endblock %}
