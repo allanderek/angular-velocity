@@ -166,8 +166,8 @@ def give_feedback():
 def login():
     form = LoginForm()
     if form.validate_on_submit():
-        users = (database.session.query(User)
-                 .filter_by(username=form.username.data).all())
+        query = database.session.query(User)
+        users = query.filter_by(username=form.username.data).all()
         if len(users) == 0:
             flask.flash('Username not found', 'error')
             return flask.redirect(redirect_url())
@@ -178,6 +178,7 @@ def login():
         set_logged_in_user(form.username.data)
         return flask.redirect(redirect_url())
     else:
+        flask.flash('Login form not-validated', 'error')
         return flask.redirect(redirect_url())
 
 
