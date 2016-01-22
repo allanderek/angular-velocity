@@ -1,5 +1,18 @@
 {% extends "base.html" %}
 {% set active_page = "frontpage" %}
+{% block page_css %}
+<style>
+#starter-buttons-containter{
+  margin: 0 auto;
+  width: 100%;
+  text-align: ceter;
+}
+.starter-button{
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+{% endblock %}{# end of page_css block #}
 {% block lead_content %}
 
 <h1>Welcome to Angular Velocity</h1>
@@ -13,15 +26,15 @@ rental loans of research equipment.
 
 {% block main_content %}
 
-<div id="#starter-buttons" style="margin: 0 auto; width: 50%;">
-  <button type="button" class="btn btn-lg btn-primary">
+<div style="text-align: center;">
+  <button type="button" class="btn btn-info">
     <h3>hire</h3>
     I need equipment for <strong>hire</strong>
   </button>
-  <button type="button" class="btn btn-lg btn-primary">
+  <button type="button" class="btn btn-warning">
     <h3>rent</h3>
     I have equipment available for <strong>rent</strong>
   </button>
-</div><!-- /#starter-buttons -->
+</div>
 
 {% endblock %}
