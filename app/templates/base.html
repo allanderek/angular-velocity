@@ -18,6 +18,13 @@ body {
   padding: 40px 15px;
   text-align: center;
 }
+.footer {
+  bottom: 0;
+  width: 100%;
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
 </style>
 <style class="theme-style wonderland">
 </style>
@@ -122,7 +129,14 @@ body {
 
     {% block main_content %}
     {% endblock %}
+
 </div><!-- /.container -->
+
+<footer class="footer">
+     <div class="container">
+       <p class="text-muted">Angular Velocity: working to optimise science since 2016.</p>
+     </div>
+</footer>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
