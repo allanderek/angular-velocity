@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% set active_page = "frontpage" %}
+{% block page_css %}
+<style>
+#starter-buttons-containter{
+  margin: 0 auto;
+  width: 100%;
+  text-align: ceter;
+}
+.starter-button{
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+{% endblock %}{# end of page_css block #}
+{% block lead_content %}
+
+<h1>Rental Offer</h1>
+
+<p class="lead">
+Fill in this form to offer equipment you own for rental.
+</p>
+{% endblock %}
+
+{% block main_content %}
+
+<div id="offer-form-container">
+<form id="equipment-offer-form" method="POST"
+      action="{{ url_for('equipment_offer') }}" class="form-group">
+      <h3>Create a new account</h3>
+    {{offer_form.hidden_tag() }}
+    {{offer_form.equipment_name(size=30, class="form-control",
+                                placeholder="Name of equipment")}}
+    {{offer_form.equipment_description(size=30, class="form-control",
+                                placeholder="Description of equipment")}}
+    <input id="submit-offer-form" type="submit" value="Offer Equipment"
+           class="btn btn-large btn-primary">
+</form>
+</div><!-- /#account-form-container -->
+
+
+{% endblock %}

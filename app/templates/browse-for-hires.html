@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% set active_page = "frontpage" %}
+{% block page_css %}
+<style>
+#starter-buttons-containter{
+  margin: 0 auto;
+  width: 100%;
+  text-align: ceter;
+}
+.starter-button{
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+{% endblock %}{# end of page_css block #}
+{% block lead_content %}
+
+<h1>For Hires</h1>
+
+<p class="lead">
+Browse equipment for hire that you wish to rent.
+</p>
+{% endblock %}
+
+{% block main_content %}
+
+<ul>
+  {% for equipment in for_hires: %}
+    <li><ul>
+          <li>{{equipment.name}}</li>
+          <li>{{equipment.description}}</li>
+          <li>{{equipment.owner}}</li>
+          <li>{{equipment.requires_human}}</li>
+        </ul>
+    </li>
+  {% endfor %}{# end for equipment #}
+</ul>
+
+{% endblock %}

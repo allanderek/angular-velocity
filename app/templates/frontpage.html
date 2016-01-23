@@ -27,14 +27,14 @@ rental loans of research equipment.
 {% block main_content %}
 
 <div style="text-align: center;">
-  <button type="button" class="btn btn-info">
+  <a type="button" class="btn btn-info" href="{{url_for('equipment_for_hire')}}">
     <h3>hire</h3>
     I need equipment for <strong>hire</strong>
-  </button>
-  <button type="button" class="btn btn-warning">
+  </a>
+  <a type="button" class="btn btn-warning" href="{{url_for('equipment_offer')}}">
     <h3>rent</h3>
     I have equipment available for <strong>rent</strong>
-  </button>
+  </a>
 </div>
 
 {% endblock %}

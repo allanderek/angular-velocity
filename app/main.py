@@ -89,6 +89,49 @@ def render_template(*args, **kwargs):
 def frontpage():
     return render_template('frontpage.html')
 
+class Equipment(database.Model):
+    __tablename__ = 'equipment'
+    id = database.Column(database.Integer, primary_key=True)
+    owner = database.Column(database.Integer, database.ForeignKey('user.id'))
+    name = database.Column(database.String(2400))
+    description = database.Column(database.String(2400))
+    requires_human = database.Column(database.Boolean)
+
+@application.route("/forhire")
+def equipment_for_hire():
+    query = database.session.query(Equipment)
+    # The use of 'all' turns this into a list, might be better
+    # for it to simply iterate through the results.
+    for_hires = query.limit(100).all()
+    return render_template('browse-for-hires.html', for_hires=for_hires)
+
+class EquipmentOfferForm(flask_wtf.Form):
+    equipment_name = wtforms.StringField("Equipment name",
+                                         validators=[validators.DataRequired()])
+    equipment_description = wtforms.StringField("Equipment description",
+                                         validators=[validators.DataRequired()])
+
+
+@application.route('/equipment_offer', methods=('GET', 'POST'))
+def equipment_offer():
+    offer_form = EquipmentOfferForm()
+    if flask.request.method == 'GET':
+        return render_template('offer-form.html', offer_form=offer_form)
+    if offer_form.validate_on_submit():
+        equipment = Equipment(owner=logged_in_user(),
+                              name=offer_form.equipment_name.data,
+                              description=offer_form.equipment_description.data,
+                              requires_human=True
+                              )
+        database.session.add(equipment)
+        database.session.commit()
+        flask.flash("Equipment Offered for Rent.")
+        # TODO, This should probably go to the equipment offer page
+        return flask.redirect('/')
+    else:
+        flask.flash('Equipment form has not been validated.')
+        return render_template('offer-form.html', offer_form=offer_form)
+
 
 @async
 def send_email_message_mailgun(email):
@@ -176,7 +219,7 @@ def login():
             flask.flash('Password incorrect', 'error')
             return flask.redirect(redirect_url())
         set_logged_in_user(form.username.data)
-        return flask.redirect(redirect_url())
+        return flask.redirect('/')
     else:
         flask.flash('Login form not-validated', 'error')
         return flask.redirect(redirect_url())
@@ -232,6 +275,7 @@ def logged_in_user():
 
 class User(database.Model):
     id = database.Column(database.Integer, primary_key=True)
+    equipments = database.relationship('Equipment')
     username = database.Column(database.String(length=254))
     password_hash = database.Column(database.String(length=254))
 
